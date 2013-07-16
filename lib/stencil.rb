@@ -1,55 +1,42 @@
 $:.unshift File.dirname(__FILE__)
 
-require 'stencil/branches'
-require 'stencil/cmd'
-require 'stencil/config'
-require 'stencil/hash'
-require 'stencil/merge'
-require 'stencil/msg'
-
 class Stencil
   
   def initialize(args)
     path = Dir.pwd
-    name = File.basename(path).intern
-    
-    # If template, do a template merge
-    if Config.exists?(:templates, path)
-      Merge.template(path, args.include?('push'))
-    
-    # If project
-    elsif Config.exists?(:projects, path)
-      
-      # If upstream commit, merge upstream
-      if args.first == '^'
-        Merge.upstream *args[1..-1].unshift(name) and return
-      
-      # If template specified, update config
-      elsif args.first
-        Config.update(:projects => {
-          name => {
-            :template => args.shift,
-            :branches => args
-          }
-        })
-        
-      end
-      
-      # Do a project merge
-      Merge.project(name, path)
-    
-    # If not configured
-    else
-      
-      # Update config
-      Msg.is_template_or_project?(name)
-      Config.update((STDIN.gets[0..0].downcase == 't' ? :templates : :projects) => {
-        name => { :path => path }
-      })
+    args.each do |arg|
+      next unless arg.include?('->')
+      from, to = arg.split('->')
+      rename(from, to)
+      replace(from, to)
+      remote(from, to)
+    end
+  end
 
-      # Re-run
-      initialize args
-      
+  def remote(from, to)
+    url = `git remote show -n origin`.match(/Push\s+URL:\s+(\S+)/)[1] rescue nil
+    new_url = url.gsub(from, to)
+    return if url == new_url
+    `git remote rm origin`
+    `git remote add origin #{new_url}`
+  end
+
+  def rename(from, to)
+    dir = Dir["**/#{from}*"]
+    begin
+      if a = dir.pop
+        b = a.split('/')
+        b[-1].gsub!(from, to)
+        FileUtils.mv(a, b.join('/'))
+      end
+    end while dir.length > 0
+  end
+
+  def replace(from, to)
+    Dir["**/*"].each do |path|
+      next unless File.file?(path)
+      text = File.read(path).gsub(from, to)
+      File.open(path, 'w') { |f| f.write(text) }
     end
   end
 end

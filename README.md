@@ -16,6 +16,8 @@ This replaces code and file names:
 * `project` becomes `new_project`
 * `Project` becomes `NewProject`
 
+It will also replace the keywords on the git origin URL (if git repo).
+
 ###Replace file via inline comment
 
 	puts "replace me"
