@@ -48,7 +48,7 @@ class Stencil
     Dir["**/*"].each do |path|
       next unless File.file?(path)
       text = File.read(path)
-      next unless text =~ from_regex
+      next unless (text =~ from_regex rescue nil)
       File.open(path, 'w') { |f| f.write(gsub(text)) }
     end
   end
