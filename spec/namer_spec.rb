@@ -16,8 +16,8 @@ describe Namer do
     `git init .`
     `git remote add origin https://github.com/winton/project.git`
 
-    Namer.new([ "project->new_project", "Project->NewProject" ])
-    Namer.remote.should == "https://github.com/winton/new_project.git"
+    namer = Namer.new([ "project:new_project", "Project:NewProject" ])
+    namer.remote.should == "https://github.com/winton/new_project.git"
 
     File.read("#{fixture}/new_project/new_project.rb").should == "new_project\nNewProject\nMyProject"
   end
