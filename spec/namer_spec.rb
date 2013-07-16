@@ -7,6 +7,10 @@ describe Namer do
     FileUtils.rm_rf(fixture)
     FileUtils.mkdir_p("#{fixture}/project")
     
+    File.open("#{fixture}/project.rb", 'w') do |f|
+      f.write("fail\n# -- replace\n# success")
+    end
+
     File.open("#{fixture}/project/project.rb", 'w') do |f|
       f.write("project\nProject\nMyProject")
     end
@@ -19,6 +23,7 @@ describe Namer do
     namer = Namer.new([ "project:new_project", "Project:NewProject" ])
     namer.remote.should == "https://github.com/winton/new_project.git"
 
+    File.read("#{fixture}/new_project.rb").should == "success"
     File.read("#{fixture}/new_project/new_project.rb").should == "new_project\nNewProject\nMyProject"
   end
 end

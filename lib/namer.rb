@@ -7,9 +7,9 @@ class Namer
     args.each do |arg|
       next unless arg.include?(':')
       @from, @to  = arg.split(':')
-      rename        unless args.include?('--no-rename')
-      replace       unless args.include?('--no-replace')
-      rename_remote unless args.include?('--no-remote')
+      rename         unless args.include?('--no-rename')
+      replace        unless args.include?('--no-replace')
+      rename_remote  unless args.include?('--no-remote')
     end
   end
 
@@ -25,6 +25,11 @@ class Namer
 
   def gsub(str)
     str.gsub(from_regex, "\\1#{@to}\\2")
+  end
+
+  def inline_gsub(str)
+    return str unless split_str = str.split(/# -- replace\n/)[1]
+    split_str.gsub(/^\s*# /, '')
   end
 
   def rename_remote
@@ -54,8 +59,13 @@ class Namer
     dir("**/*").each do |path|
       next unless File.file?(path)
       text = File.read(path)
-      next unless (text =~ from_regex rescue nil)
-      File.open(path, 'w') { |f| f.write(gsub(text)) }
+      begin
+        text = gsub(text)
+        text = inline_gsub(text)
+      rescue Exception => e
+      ensure
+        File.open(path, 'w') { |f| f.write(text) }
+      end
     end
   end
 end
