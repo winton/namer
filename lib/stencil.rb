@@ -13,8 +13,12 @@ class Stencil
     end
   end
 
+  def from_regex
+    /([^a-zA-Z]|^)#{@from}([^a-zA-Z]|$)/
+  end
+
   def gsub(str)
-    str.gsub(/([^a-zA-Z]|^)#{@from}([^a-zA-Z]|$)/, "\\1#{@to}\\2")
+    str.gsub(from_regex, "\\1#{@to}\\2")
   end
 
   def self.remote
@@ -43,8 +47,9 @@ class Stencil
   def replace
     Dir["**/*"].each do |path|
       next unless File.file?(path)
-      text = gsub(File.read(path))
-      File.open(path, 'w') { |f| f.write(text) }
+      text = File.read(path)
+      next unless text =~ from_regex
+      File.open(path, 'w') { |f| f.write(gsub(text)) }
     end
   end
 end
