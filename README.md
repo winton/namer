@@ -4,7 +4,7 @@ Rename your project with a single command.
 
 ###Install
 
-gem install stencil
+	gem install stencil
 
 ###Rename project
 
@@ -12,9 +12,10 @@ gem install stencil
 	cd my_new_project
 	stencil
 
-In this example, all instances of `my_project` become `my_new_project` and `MyProject` become `MyNewProject`.
+This replaces code and file names:
 
-Stencil replaces code and file names.
+* `my_project` becomes `my_new_project`
+* `MyProject` becomes `MyNewProject`
 
 ###Specify keywords
 
