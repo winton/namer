@@ -14,7 +14,7 @@ class Stencil
   end
 
   def gsub(str)
-    str.gsub(/(\W|^)#{@from}(\W|$)/, "\\1#{@to}\\2")
+    str.gsub(/([^a-zA-Z]|^)#{@from}([^a-zA-Z]|$)/, "\\1#{@to}\\2")
   end
 
   def self.remote
