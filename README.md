@@ -8,20 +8,13 @@ Rename your project with a single command.
 
 ###Rename project
 
-	mv my_project my_new_project
-	cd my_new_project
-	stencil
+	cd project
+	stencil project->new_project Project->New_project
 
 This replaces code and file names:
 
-* `my_project` becomes `my_new_project`
-* `MyProject` becomes `MyNewProject`
-
-###Specify keywords
-
-Sometimes you need to specify keywords to replace:
-
-	stencil MyProject->MyNewProject my_project->my_new_project
+* `project` becomes `new_project`
+* `Project` becomes `NewProject`
 
 ###Replace file via inline comment
 
