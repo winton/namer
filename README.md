@@ -9,7 +9,7 @@ Rename your project with a single command.
 ###Rename project
 
 	cd project
-	stencil project->new_project Project->New_project
+	stencil project->new_project Project->NewProject
 
 This replaces code and file names:
 
