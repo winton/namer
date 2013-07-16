@@ -3,13 +3,13 @@ lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
-  spec.name          = "stencil"
+  spec.name          = "namer"
   spec.version       = "0.1.5"
   spec.authors       = ["Winton Welsh"]
   spec.email         = ["mail@wintoni.us"]
   spec.description   = %q{Project template manager}
   spec.summary       = %q{Project template manager.}
-  spec.homepage      = "https://github.com/winton/stencil"
+  spec.homepage      = "https://github.com/winton/namer"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)

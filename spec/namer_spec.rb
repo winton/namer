@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Stencil do
+describe Namer do
   it "should work" do
     fixture = "#{$root}/spec/fixture"
     
@@ -16,8 +16,8 @@ describe Stencil do
     `git init .`
     `git remote add origin https://github.com/winton/project.git`
 
-    Stencil.new([ "project->new_project", "Project->NewProject" ])
-    Stencil.remote.should == "https://github.com/winton/new_project.git"
+    Namer.new([ "project->new_project", "Project->NewProject" ])
+    Namer.remote.should == "https://github.com/winton/new_project.git"
 
     File.read("#{fixture}/new_project/new_project.rb").should == "new_project\nNewProject\nMyProject"
   end

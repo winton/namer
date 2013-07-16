@@ -1,6 +1,6 @@
 $:.unshift File.dirname(__FILE__)
 
-class Stencil
+class Namer
   
   def initialize(args)
     path = Dir.pwd
