@@ -7,9 +7,9 @@ class Stencil
     args.each do |arg|
       next unless arg.include?('->')
       @from, @to  = arg.split('->')
-      rename
-      replace
-      rename_remote
+      rename        unless args.include?('--no-rename')
+      replace       unless args.include?('--no-replace')
+      rename_remote unless args.include?('--no-remote')
     end
   end
 
@@ -43,9 +43,8 @@ class Stencil
   def replace
     Dir["**/*"].each do |path|
       next unless File.file?(path)
-      File.open(path, 'w') do |f|
-        f.write(gsub(File.read(path)))
-      end
+      text = gsub(File.read(path))
+      File.open(path, 'w') { |f| f.write(text) }
     end
   end
 end
