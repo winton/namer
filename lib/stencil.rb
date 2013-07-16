@@ -6,37 +6,46 @@ class Stencil
     path = Dir.pwd
     args.each do |arg|
       next unless arg.include?('->')
-      from, to = arg.split('->')
-      rename(from, to)
-      replace(from, to)
-      remote(from, to)
+      @from, @to  = arg.split('->')
+      rename
+      replace
+      rename_remote
     end
   end
 
-  def remote(from, to)
-    url = `git remote show -n origin`.match(/Push\s+URL:\s+(\S+)/)[1] rescue nil
-    new_url = url.gsub(from, to)
+  def gsub(str)
+    str.gsub(/(\W|^)#{@from}(\W|$)/, "\\1#{@to}\\2")
+  end
+
+  def self.remote
+    `git remote show -n origin`.match(/Push\s+URL:\s+(\S+)/)[1] rescue nil
+  end
+
+  def rename_remote
+    url = self.class.remote
+    new_url = gsub(url)
     return if url == new_url
     `git remote rm origin`
     `git remote add origin #{new_url}`
   end
 
-  def rename(from, to)
-    dir = Dir["**/#{from}*"]
+  def rename
+    dir = Dir["**/#{@from}*"]
     begin
       if a = dir.pop
         b = a.split('/')
-        b[-1].gsub!(from, to)
+        b[-1] = gsub(b[-1])
         FileUtils.mv(a, b.join('/'))
       end
     end while dir.length > 0
   end
 
-  def replace(from, to)
+  def replace
     Dir["**/*"].each do |path|
       next unless File.file?(path)
-      text = File.read(path).gsub(from, to)
-      File.open(path, 'w') { |f| f.write(text) }
+      File.open(path, 'w') do |f|
+        f.write(gsub(File.read(path)))
+      end
     end
   end
 end
