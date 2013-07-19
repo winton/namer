@@ -29,7 +29,7 @@ class Namer
 
   def inline_gsub(str)
     return str unless split_str = str.split(/# -- replace\n/)[1]
-    split_str.gsub(/^\s*# /, '')
+    split_str.gsub(/^\s*#\s?/, '')
   end
 
   def rename_remote
