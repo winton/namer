@@ -2,6 +2,8 @@
 
 Rename your project with a single command.
 
+[![Build Status](https://secure.travis-ci.org/winton/namer.png)](http://travis-ci.org/winton/namer)
+
 ###Install
 
 	gem install namer
